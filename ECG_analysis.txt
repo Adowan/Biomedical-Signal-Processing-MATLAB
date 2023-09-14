@@ -1,0 +1,25 @@
+clc;
+clear all % clears all active variables
+close all
+ecg = load('ecg_hfn.dat'); %Load sample ECG signal from file "ecg_hfn.dat"
+fs = 1000; %sampling rate = 1000 Hz
+sig_len = length(ecg);
+t=[1:sig_len]/fs;
+figure;
+plot(t, ecg); axis tight;
+xlabel('Time in seconds'); ylabel('ECG');
+j=0;
+for i=1:12
+ x(i,:)=ecg(1+j:714+j); %Splitting the ECG signal using the trigger point into i observations
+ j=714;
+end
+%Adding random noise to a few observations
+%n = randn(size(x(1,:)))/10; %random noise
+% x(2,:) = x(2,:)+n; %plot the signal with and without noise 
+%n1 = randn(size(x(1,:)))/5; %random noise
+% x(3,:) = x(3,:)+n1; %plot the signal with and without noise
+figure; %give figure title and label each axes
+subplot 411; plot(x(1,:));
+subplot 412; plot(sum(x(1:3,:))/3);
+subplot 413; plot(sum(x(1:5,:))/5);
+subplot 414; plot(sum(x(1:12,:))/12);

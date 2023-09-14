@@ -1,0 +1,58 @@
+clc; clear all; close all;
+fs = 400;
+CT_notch_freq = 50; DT_notch_freq = 2*pi*CT_notch_freq/fs;
+%In z-plane, zeros = exp(±j*DT_notch_freq), poles = r*exp(±*DT_notch_freq)
+%Here, r is the radius of the IIR plots, 0<r<1
+r=0.7;
+notchzeros = [exp(1i*DT_notch_freq) exp(-1i*DT_notch_freq)];
+notchpoles = [r*exp(1i*DT_notch_freq) r*exp(-1i*DT_notch_freq)];
+b = poly(notchzeros); a = poly(notchpoles);
+[db, mag, pha, grd, w] = freqz_m(b,a);
+figure;
+subplot 221;
+plot(w*fs/(2*pi), db);
+xlabel('frequency in Hz'); ylabel('dB');
+title('Notch Filter Response');
+6
+t = 0:1/fs:1;
+x = sin(2*pi*50*t) + sin(2*pi*100*t); %Input signal
+subplot 222;
+plot(t, x); title('Input Sinusoidal Signal'); xlim([0.2 0.4]);
+X = fft(x); m = abs(X);
+f = (0:length(X)-1)*fs/length(X);
+subplot 223;
+plot(f,m);
+xlabel('Frequency in Hz'); ylabel('Amplitude');
+title('Frequency Spectrum of Original Signal');
+y = filter(b,a,x); %Realization of 50Hz Notch Filter
+X1 = fft(y); m1 = abs(X1);
+f = (0:length(X1)-1)*fs/length(X1);
+subplot 224;
+plot(f, m1);
+xlabel('Frequency in Hz'); ylabel('Amplitude');
+title('Frequency Spectrum of Filtered Signal');
+
+# User Define Function freqz_m()
+
+function [db, mag, pha, grd, w] = freqz_m(b, a)
+% Modified version of freqz() subroutine
+% [db,mag,pha,grd,w] = freqz_m(b,a);
+% db = Relative magnitude in dB computed over 0 to pi radians
+% mag = absolute magnitude computed over 0 to pi radians 
+% pha = Phase response in radians over 0 to pi radians
+% grd = Group delay over 0 to pi radians
+% w = 501 frequency samples between 0 to pi radians
+% b = numerator polynomial of H(z) (for FIR: b = h)
+% a = denominator polynomial of H(z) (for FIR: a = [1])
+[H, w] = freqz(b, a,1000, 'whole');
+ H = (H(1:1:501))'; w = (w(1:1:501))';
+7
+ mag = abs(H);
+ db = 20*log10((mag+eps)/max(mag));
+ pha = angle(H);
+% pha = unwrap(angle(H));
+ grd = grpdelay(b, a, w);
+% grd = diff(pha);
+% grd = [grd(1) grd];
+% grd = [0 grd(1:1:500); grd; grd(2:1:501) 0];
+% grd = median(grd)*500/pi;

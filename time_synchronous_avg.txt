@@ -1,0 +1,23 @@
+clc; clear all; close all;
+fs = 500; f0 = 10;
+t = 0:1/fs:5-1/fs;
+n = randn(size(t));
+x = sin(2*pi*f0*t);
+y = x + n/10;
+figure;
+subplot 311; plot(t,x); xlim([0 1/f0]);
+title("Sinusoidal Signal");
+ylabel('Amplitude in mV'); xlabel('Time in seconds');
+grid on;
+subplot 312; plot(t,n); xlim([0 1/f0]);
+title("Random Noise");
+ylabel('Amplitude in mV'); xlabel('Time in seconds');
+grid on;
+subplot 313; plot(t,y); xlim([0 1/f0]);
+title("Sinusoidal Signal with Random Noise");
+ylabel('Amplitude in mV'); xlabel('Time in seconds');
+grid on;
+tp = 0:1/f0:max(t);
+figure;
+tsa(y,fs,tp); %Time-synchronous signal average
+title("Synchronous Averaging Filter");

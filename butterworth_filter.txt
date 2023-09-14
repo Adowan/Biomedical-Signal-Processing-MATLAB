@@ -1,0 +1,21 @@
+clc; clear all; close all; 
+n = 5; f = 2e9;
+[zb, pb, kb] = butter(n, 2*pi*f, 's'); %Butterworth filter
+[bb, ab] = zp2tf(zb, pb, kb); % Converting zero-pole-gain filter parameters to transfer function form
+[hb, wb] = freqs(bb, ab, 4096); % Computing the frequency response of the filter at 4096 points
+[z1, p1, k1] = cheby1(n, 3, 2*pi*f, 's'); %Chebyshev Type I filter 
+[b1, a1] = zp2tf(z1, p1, k1); 
+[h1, w1] = freqs(b1, a1, 4096);
+[z2, p2, k2] = cheby2(n, 30, 2*pi*f, 's'); %Chebyshev Type II filter
+[b2, a2] = zp2tf(z2, p2, k2);
+[h2, w2] = freqs(b2, a2, 4096);
+[ze, pe, ke] = ellip(n, 3, 30, 2*pi*f, 's'); %Elliptic filter
+[be, ae] = zp2tf(ze, pe, ke);
+[he, we] = freqs(be, ae, 4096);
+%Comparing the filters (Butterworth, Chebyshev Type I, Chebyshev Type II, Elliptic)
+plot(wb/(2e9*pi), mag2db(abs(hb))); hold on;
+plot(w1/(2e9*pi), mag2db(abs(h1))); plot(w2/(2e9*pi), mag2db(abs(h2)));
+plot(we/(2e9*pi), mag2db(abs(he)));
+axis([0 4 -40 5]); grid on;
+xlabel('Frequency (GHz)'); ylabel('Attenuation (dB)');
+legend('Butterworth', 'Chebyshev Type I', 'Chebyshev Type II',' Elliptic');

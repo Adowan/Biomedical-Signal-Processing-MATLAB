@@ -1,0 +1,18 @@
+clc; clear all; close all;
+ecg = load('ecg_hfn.dat'); % loading a noisy ECG signal
+fs = 1000; % sampling rate
+sig_len = length(ecg); % computing the length 
+t=[1:sig_len]/fs; % generating the time vector 
+figure; 
+subplot 211; % plotting the signal
+plot(t, ecg); grid on;
+xlabel('Time (sec)'); ylabel('ECG1');
+title('Noisy ECG signal');
+ord_1 = 2; % filter order
+fc_1 = 10; % filter cut-off frequency 
+[b_1, a_1] = butter(ord_1, fc_1/(fs/2)); % computing filter coefficient 
+filt_sig_1 = filter(b_1, a_1, ecg); % processing the filter
+subplot 212;
+plot(t, filt_sig_1); grid on;
+xlabel('Time (sec)'); ylabel('ECG');
+title('Filtered ECG signal [Order = 2, Cut off freq. = 10Hz]');

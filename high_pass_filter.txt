@@ -1,0 +1,16 @@
+load chirp % it will load chirp signal saved in variable y and sampling 
+frequency Fs
+t = (0:length(y)-1)/Fs; % Calculating t to plot the original signal in 
+time axis
+bhi = fir1(34,0.48,'high',chebwin(35,30)); 
+freqz(bhi,1)
+outhi = filter(bhi,1,y);
+subplot(2,1,1)
+plot(t,y)
+title('Original Signal')
+ys = ylim;
+subplot(2,1,2)
+plot(t,outhi)
+title('Highpass Filtered Signal')
+xlabel('Time (s)')
+ylim(ys)
