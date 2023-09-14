@@ -1,0 +1,35 @@
+
+Sf= 2 Hz, D=8 sec, N=16 % (a) samples
+Sf=2; D=8; N=16;
+t=0:1/Sf: (N-1)*1/Sf; 
+x=t.*exp(-t);
+ya=fft(x,N); 
+ya=fftshift(ya);
+fo=1/D; %Spectral Resolution;
+fa=-(N/2)*fo:fo:(N/2-1)*fo;
+subplot(2,1,1);
+stem(fa,1/Sf*abs(ya));
+title('1/Sf*DFT: Sf=2Hz and D=8 sec');
+grid; 
+hold on; 
+plot(f,abs(xf)); 
+hold off;
+Sf=16 Hz; D= 8 sec; N=128 % (b) samples
+Sf=16; D=8; N=128;
+t=0:1/Sf: (N-1)*1/Sf; 
+x=t.*exp(-t);
+yb=fft(x,N); 
+yb=fftshift(yb);
+fo=1/D; %Spectral Resolution; 
+fb=-(N/2)*fo:fo:(N/2-1)*fo;
+% Truncate the frequency range to 2 Hz.
+% Find the entry in the frequency vector corresponding to -2 and +2 Hz:
+f1= (-2-(-N/2*fo))/fo + 1; % (Desired - Start)/Increment + 1
+f2=(2 - (-N/2*fo))/fo + 1;
+subplot(2,1,2); 
+stem(fb(f1:f2),1/Sf*abs(yb(f1:f2)));
+title('1/Sf*DFT: Sf=16Hz and D=8 sec');
+grid; 
+hold on; 
+plot(f,abs(xf)); 
+hold off;
