@@ -1,4 +1,4 @@
-# Biomedical-Signal-Processing
+# Biomedical-Signal-Processing-MATLAB
 The predominant objective of this experiment is to implement DFT and IDFT and analyse biomedical signals using them.
 
 The main points to understand about a Discrete Fourier Transform (DFT) are:
